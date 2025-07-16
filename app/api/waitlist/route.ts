@@ -59,30 +59,32 @@ export async function POST(request: NextRequest) {
     });
 
     // Send confirmation email using Resend
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const emailRes = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: 'Your App <onboarding@resend.dev>', // Use your verified sender
-            to: newEntry.email,
-            subject: 'Welcome to the Waitlist!',
-            html: '<p>Thank you for joining the waitlist!</p>',
-          }),
-        });
-        const emailData = await emailRes.json();
-        console.log('Resend response:', emailData);
-        if (!emailRes.ok) {
-          console.error('Resend error:', emailData);
-        }
-      } catch (err) {
-        console.error('Resend API call failed:', err);
+   // Send confirmation email using Resend
+   if (process.env.RESEND_API_KEY) {
+    try {
+      const emailRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Your App <teammurph@tars.live>', // Use your verified sender
+          to: newEntry.email,
+          subject: 'Welcome to the Waitlist!',
+          html: '<p>Thank you for joining the waitlist!</p>',
+        }),
+      });
+      const emailData = await emailRes.json();
+      console.log('Resend response:', emailData);
+      if (!emailRes.ok) {
+        console.error('Resend error:', emailData);
       }
+    } catch (err) {
+      console.error('Resend API call failed:', err);
     }
+  }
+
 
     return NextResponse.json({
       message: "Successfully joined waitlist",
