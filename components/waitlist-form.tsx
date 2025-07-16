@@ -16,7 +16,7 @@ const waitlistSchema = z.object({
 type WaitlistFormData = z.infer<typeof waitlistSchema>;
 
 interface WaitlistFormProps {
-  onSuccess: (data: { email: string; name: string; position: number }) => void;
+  onSuccess: (data: { email: string; name: string; id: number; position: number }) => void;
 }
 
 export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
@@ -54,7 +54,12 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       }
 
       const result = await response.json();
-      onSuccess(result);
+      onSuccess({
+        email: result.email,
+        name: data.name,
+        id: result.id,
+        position: result.position,
+      });
       reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

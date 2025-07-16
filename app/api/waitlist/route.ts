@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "../../../lib/generated/prisma";
 import { z } from "zod";
+import * as React from 'react';
+import { render } from '@react-email/render';
+import TarsWelcomeEmail from '../../../emails/welcomeMail';
 export const dynamic = "force-dynamic";
 const prisma = new PrismaClient();
 
@@ -38,6 +41,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = waitlistSchema.parse(body);
+    const userFirstname = typeof body.name === 'string' ? body.name : 'there';
 
     // Check if email already exists
     const existingEntry = await prisma.waitlistEntry.findUnique({
@@ -58,10 +62,25 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Find the user's position in the waitlist
+    const position = await prisma.waitlistEntry.count({
+      where: {
+        createdAt: {
+          lte: newEntry.createdAt,
+        },
+      },
+    });
+
     // Send confirmation email using Resend
-   // Send confirmation email using Resend
    if (process.env.RESEND_API_KEY) {
     try {
+      const emailHtml = await render(
+        React.createElement(TarsWelcomeEmail, { userFirstname })
+      );
+      console.log('Rendered email HTML:', emailHtml, typeof emailHtml);
+      if (typeof emailHtml !== 'string') {
+        throw new Error('Email HTML is not a string!');
+      }
       const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -69,10 +88,10 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Your App <teammurph@tars.live>', // Use your verified sender
+          from: 'Your App <teammurph@tarsai.live>', // Use your verified sender
           to: newEntry.email,
           subject: 'Welcome to the Waitlist!',
-          html: '<p>Thank you for joining the waitlist!</p>',
+          html: emailHtml,
         }),
       });
       const emailData = await emailRes.json();
@@ -89,6 +108,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: "Successfully joined waitlist",
       email: newEntry.email,
+      id: newEntry.id,
+      position, // 1-based position in line
       createdAt: newEntry.createdAt,
     });
   } catch (error) {

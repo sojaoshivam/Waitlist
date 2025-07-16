@@ -14,10 +14,11 @@ export default function Home() {
   const [successData, setSuccessData] = useState<{
     email: string;
     name: string;
+    id: number;
     position: number;
   } | null>(null);
 
-  const handleSuccess = (data: { email: string; name: string; position: number }) => {
+  const handleSuccess = (data: { email: string; name: string; id: number; position: number }) => {
     setSuccessData(data);
   };
 
@@ -43,8 +44,8 @@ export default function Home() {
              TARS AI
             </h2>
             <p className="text-neutral-400 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed relative z-10">
-              Experience the next generation of artificial intelligence. Tars AI combines cutting-edge 
-              technology with intuitive design to revolutionize how you work, create, and innovate.
+              {/* AI-powered document intelligence that makes complex content searchable, accessible, and insightful.<br/><br/> */}
+               Join the waitlist and be the first to experience the future of knowledge access.
             </p>
           </motion.div>
 
@@ -66,7 +67,7 @@ export default function Home() {
 
       {/* Footer */}
       <div className="w-full px-2 sm:px-0 absolute bottom-2 left-0 right-0 text-center text-neutral-600 text-xs sm:text-sm z-10">
-        <p>© 2024 Tars AI. All rights reserved.</p>
+        <p>© 2025 TARS AI. All rights reserved.</p>
       </div>
     </div>
   );
