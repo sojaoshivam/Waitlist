@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@/lib/generated/prisma";
+import { PrismaClient } from "../../../lib/generated/prisma";
 import { z } from "zod";
 export const dynamic = "force-dynamic";
 const prisma = new PrismaClient();
