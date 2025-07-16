@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Your App <teammurph@tars.live>', // Use your verified sender
+          from: 'Your App <teammurph@tarsai.live>', // Use your verified sender
           to: newEntry.email,
           subject: 'Welcome to the Waitlist!',
           html: '<p>Thank you for joining the waitlist!</p>',
