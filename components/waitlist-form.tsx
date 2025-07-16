@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const waitlistSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  name: z.string().min(1, "Name is required").default("User"),
+  name: z.string().min(1, "Name is required"),
 });
 
 type WaitlistFormData = z.infer<typeof waitlistSchema>;
