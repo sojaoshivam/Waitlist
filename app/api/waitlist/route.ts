@@ -89,24 +89,74 @@ export async function POST(request: NextRequest) {
     <meta charset="UTF-8" />
     <title>Welcome to TARS AI</title>
   </head>
-  <body style="background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',sans-serif;">
-    <div style="margin:0 auto;padding:20px 0 48px;">
-      <img src="https://tarsai.live/static/tars-logo.png" width="170" height="50" alt="TARS AI" style="margin:0 auto;" />
-      <p style="font-size:16px;line-height:26px;">Hi ${userFirstname},</p>
-      <p style="font-size:16px;line-height:26px;">
-        Welcome to <b>TARS AI</b>, the document intelligence platform that transforms complex archives into accessible, actionable knowledge—empowering you to search, discover, and gain insights effortlessly.
-      </p>
-      <div style="text-align:center;">
-        <a href="https://tarsai.live" style="background-color:#393BB2;border-radius:3px;color:#fff;font-size:16px;text-decoration:none;text-align:center;display:block;padding:12px;">Get Started with TARS AI</a>
+
+  <body style="margin:0;padding:0;background:#ffffff;
+               font-family:-apple-system,BlinkMacSystemFont,
+               'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,
+               'Helvetica Neue',sans-serif;color:#1a1a1a;">
+    <div style="max-width:560px;margin:0 auto;padding:32px 20px;">
+      
+      <!-- Logo -->
+      <div style="text-align:center;margin-bottom:28px;">
+        <img src="https://tarsai.live/static/tars-logo.png"
+             width="170" height="50" alt="TARS AI" />
       </div>
-      <p style="font-size:16px;line-height:26px;">
-        We're excited to have you on board!<br />
-        The TARS AI Team
+
+      <!-- Greeting -->
+      <p style="font-size:18px;line-height:28px;margin:0 0 16px;">
+        Hi&nbsp;${userFirstname},
       </p>
-      <hr style="border-color:#cccccc;margin:20px 0;" />
-      <p style="color:#8898aa;font-size:12px;">
-        TARS AI, Udaipur, Rajasthan, India<br />
-        You're receiving this email because you joined the TARS AI waitlist.
+
+      <!-- Opening copy -->
+      <p style="font-size:16px;line-height:26px;margin:0 0 14px;">
+        Thank you for hopping on the TARS AI early-access wait-list!  
+        We’re thrilled to have curious minds like yours on board.
+      </p>
+
+      <!-- Value prop -->
+      <p style="font-size:16px;line-height:26px;margin:0 0 14px;">
+        TARS AI turns scattered, complex document archives into 
+        instantly searchable knowledge—so you can discover insights 
+        <em>exactly</em> when you need them.
+      </p>
+
+      <!-- What happens next -->
+      <p style="font-size:16px;line-height:26px;margin:0 0 24px;">
+        We’re rolling out invitations in small waves to be sure every
+        new user has a smooth experience. When your turn comes up,
+        you’ll receive an e-mail with your personal access link.
+      </p>
+
+      <!-- CTA button -->
+      <div style="text-align:center;margin:32px 0;">
+        <a href="https://tarsai.live"
+           style="background:#393BB2;border-radius:4px;
+                  color:#ffffff;text-decoration:none;
+                  font-size:16px;display:inline-block;
+                  padding:12px 24px;">
+          Sneak a Peek at TARS AI
+        </a>
+      </div>
+
+      <!-- Closing -->
+      <p style="font-size:16px;line-height:26px;margin:0 0 18px;">
+        We can’t wait to show you what we’re building.
+        If you have any questions, ideas or use-cases you’d like to
+        share, simply reply to this e-mail—we’d love to hear from you!
+      </p>
+
+      <p style="font-size:16px;line-height:26px;margin:0 0 40px;">
+        Talk soon,<br/>
+        <strong>The TARS AI Team</strong> 🚀
+      </p>
+
+      <!-- Divider -->
+      <hr style="border:0;border-top:1px solid #e2e2e2;margin:0 0 24px;"/>
+
+      <!-- Footer -->
+      <p style="color:#8898aa;font-size:12px;line-height:18px;margin:0;">
+        TARS AI · Udaipur, Rajasthan, India<br/>
+        You’re receiving this e-mail because you joined the TARS AI wait-list.
       </p>
     </div>
   </body>
@@ -119,9 +169,9 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Your App <teammurph@tarsai.live>', // Use your verified sender
+          from: 'Team TARS AI <teammurph@tarsai.live>',
           to: newEntry.email,
-          subject: 'Welcome to the Waitlist!',
+          subject: 'Welcome aboard',
           html: emailHtml,
         }),
       });
