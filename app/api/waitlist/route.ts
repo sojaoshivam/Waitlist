@@ -3,7 +3,7 @@ import { PrismaClient } from "../../../lib/generated/prisma";
 import { z } from "zod";
 import * as React from 'react';
 import { render } from '@react-email/render';
-import TarsWelcomeEmail from '../../../emails/welcomeMail';
+import { TarsWelcomeEmail } from '../../../emails/welcomeMail';
 export const dynamic = "force-dynamic";
 const prisma = new PrismaClient();
 
