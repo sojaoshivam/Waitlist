@@ -1,27 +1,36 @@
 "use client";
 
-import { CheckCircle, Share2, Twitter } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { CheckCircle, Share2, Twitter, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
 interface SuccessMessageProps {
   data: {
     email: string;
     name: string;
+    id: number;
     position: number;
   };
   onReset: () => void;
 }
 
 export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
-  const shareText = `I just joined the waitlist for @TarsAI! 🤖 Can't wait to experience the future of AI. Join me at ${typeof window !== 'undefined' ? window.location.origin : ''}`;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
-  const handleShare = (platform: 'twitter' | 'generic') => {
+  // Social share logic
+  const shareText = `I just joined the waitlist for @TarsAI! 🤖 Can't wait to experience the future of AI. Join me at ${typeof window !== 'undefined' ? window.location.origin : ''}`;
+  const linkedInText = `I just joined the waitlist for Tars AI! 🚀 Can't wait to experience the future of AI. Join me: ${typeof window !== 'undefined' ? window.location.origin : ''}`;
+
+  const handleShare = (platform: 'twitter' | 'linkedin' | 'generic') => {
     const url = typeof window !== 'undefined' ? window.location.origin : '';
-    
     if (platform === 'twitter') {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+    } else if (platform === 'linkedin') {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&summary=${encodeURIComponent(linkedInText)}`, '_blank');
     } else {
       if (navigator.share) {
         navigator.share({
@@ -30,63 +39,118 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
           url: url,
         });
       } else {
-        // Fallback: copy to clipboard
         navigator.clipboard.writeText(`${shareText} ${url}`);
       }
     }
   };
 
+  // 3D hover effect handlers
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      setMousePosition({ x, y });
+      const rotateX = -(y / rect.height) * 5;
+      const rotateY = (x / rect.width) * 5;
+      setRotation({ x: rotateX, y: rotateY });
+    }
+  };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setRotation({ x: 0, y: 0 });
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="w-full max-w-md mx-auto font-urbanist"
-    >
-      <div className="bg-black/70 border border-neutral-800 rounded-2xl shadow-2xl p-8 md:p-10 backdrop-blur-lg flex flex-col items-center space-y-6 font-urbanist">
-        <div className="flex flex-col items-center space-y-2">
-          <div className="bg-gradient-to-br from-teal-500 to-blue-600 rounded-full p-3 shadow-lg mb-2">
-            <CheckCircle className="h-10 w-10 text-white drop-shadow-lg" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight text-center font-urbanist">Welcome to Tars AI!</h2>
-          <p className="text-neutral-400 text-lg text-center">You're successfully on the waitlist</p>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-semibold text-white font-urbanist">Hi <span className="inline-block animate-wave">👋</span></div>
-          <div className="text-lg text-neutral-300 font-urbanist">You're number <span className="text-teal-400 font-bold">#{data.position}</span> in line</div>
-          <div className="text-neutral-400 text-base font-urbanist">We'll send updates to <span className="text-blue-400 font-medium">{data.email}</span></div>
-        </div>
-        <div className="w-full bg-black/60 border border-neutral-800 rounded-xl p-4 mt-4">
-          <h3 className="text-lg font-bold text-white mb-2 font-urbanist">What's next?</h3>
-          <ul className="text-neutral-300 text-base space-y-1 list-disc list-inside">
-            <li>We'll email you when we're ready to launch</li>
-            <li>You'll get early access to all features</li>
-            <li>Special pricing for early supporters</li>
-          </ul>
-        </div>
-        <div className="w-full flex flex-col sm:flex-row gap-3 mt-6">
-          <Button
-            onClick={() => handleShare('twitter')}
-            className="w-full bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-md flex items-center justify-center font-urbanist"
-          >
-            <Twitter className="h-4 w-4 mr-2" />
-            Tweet
-          </Button>
-          <Button
-            onClick={() => handleShare('generic')}
-            className="w-full bg-neutral-800 text-white font-semibold rounded-lg shadow-md flex items-center justify-center font-urbanist"
-          >
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-        </div>
-        <Button
+    <div className="w-full flex items-center justify-center py-8">
+      <motion.div
+        ref={cardRef}
+        className="relative rounded-[32px] overflow-hidden bg-[#101010]/80 flex flex-col gap-6"
+        style={{
+          width: "420px",
+          minHeight: "480px",
+          transformStyle: "preserve-3d",
+          backgroundColor: "#101010cc", // 80% opacity
+          perspective: 1000,
+        }}
+        initial={{ y: 0 }}
+        animate={{
+          y: isHovered ? -5 : 0,
+          rotateX: rotation.x,
+          rotateY: rotation.y
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+      >
+        {/* Close button */}
+        <button
           onClick={onReset}
-          variant="ghost"
-          className="w-full text-neutral-400 hover:text-white mt-2 font-urbanist"
+          className="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center text-white text-xl font-bold transition"
+          aria-label="Close"
+          type="button"
         >
-          Add another email
-        </Button>
-      </div>
-    </motion.div>
+          &times;
+        </button>
+        {/* Green checkmark with glow */}
+        <div className="flex flex-col items-center justify-center pt-12 pb-6">
+          <div className="relative flex items-center justify-center">
+            <span className="absolute inset-0 rounded-full bg-green-400 opacity-30 blur-xl" style={{ width: 64, height: 64 }} />
+            <span className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500 shadow-lg z-10">
+              <CheckCircle className="h-10 w-10 text-white" />
+            </span>
+          </div>
+        </div>
+        {/* Main message */}
+        <div className="flex flex-col items-center justify-center px-6 pb-2 gap-2">
+          <h2 className="text-2xl font-extrabold text-center text-white mb-2">
+            You have been added to our <span className="text-green-500">waitlist!</span>
+          </h2>
+          <p className="text-white text-center text-base  mt-4 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] max-w-[270px] mx-auto">
+            Thank you for joining, you&apos;ll be the first to know when we are ready!
+          </p>
+        </div>
+        {/* Tell your friends section (unchanged) */}
+        <div className="w-full flex flex-col items-center mb-8 mt-6">
+          <div className="text-neutral-200 text-base font-urbanist mb-3 text-center tracking-wide font-semibold">Tell your friends</div>
+          <div className="flex flex-row gap-4 justify-center">
+            <Button
+              onClick={() => handleShare('twitter')}
+              className="bg-white/20 hover:bg-teal-500/30 transition-all duration-200 rounded-full p-3 shadow-lg backdrop-blur-md flex items-center justify-center"
+              title="Share on X"
+              aria-label="Share on X"
+              style={{ boxShadow: '0 2px 8px 0 rgba(56,189,248,0.15)' }}
+            >
+              {/* Custom X (Twitter) SVG */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-white group-hover:text-white transition">
+                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+              </svg>
+            </Button>
+            <Button
+              onClick={() => handleShare('linkedin')}
+              className="bg-white/20 hover:bg-blue-500/30 transition-all duration-200 rounded-full p-3 shadow-lg backdrop-blur-md flex items-center justify-center"
+              title="Share on LinkedIn"
+              aria-label="Share on LinkedIn"
+              style={{ boxShadow: '0 2px 8px 0 rgba(59,130,246,0.15)' }}
+            >
+              {/* Custom filled LinkedIn SVG */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-white group-hover:text-white transition">
+                <path d="M1.146 1.146C.417 1.875.417 3.042 1.146 3.77c.729.729 1.896.729 2.625 0 .729-.728.729-1.895 0-2.624-.729-.729-1.896-.729-2.625 0zM.5 5.5h3V15h-3V5.5zm4.5 0h2.857v1.303h.041c.398-.755 1.37-1.553 2.822-1.553C14.5 5.25 15 7.042 15 9.25V15h-3V9.75c0-1.25-.022-2.857-1.75-2.857-1.75 0-2.021 1.367-2.021 2.778V15h-3V5.5z"/>
+              </svg>
+            </Button>
+            <Button
+              onClick={() => handleShare('generic')}
+              className="bg-white/20 hover:bg-neutral-300/30 transition-all duration-200 rounded-full p-3 shadow-lg backdrop-blur-md flex items-center justify-center"
+              title="Share"
+              aria-label="Share"
+              style={{ boxShadow: '0 2px 8px 0 rgba(156,163,175,0.15)' }}
+            >
+              <Share2 className="h-6 w-6 fill-current text-white group-hover:text-white transition" fill="currentColor" />
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
