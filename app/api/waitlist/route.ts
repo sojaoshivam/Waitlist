@@ -81,6 +81,9 @@ export async function POST(request: NextRequest) {
     // Send confirmation email using Resend
    if (process.env.RESEND_API_KEY) {
     try {
+      // Dynamically import render and the email component to avoid build-time issues
+      const { render } = await import('@react-email/render');
+      const { TarsWelcomeEmail } = await import('../../../emails/welcomeMail');
       const emailHtml = await render(
         React.createElement(TarsWelcomeEmail, { userFirstname })
       );
