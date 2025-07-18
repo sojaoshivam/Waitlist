@@ -81,16 +81,8 @@ export async function POST(request: NextRequest) {
     // Send confirmation email using Resend
    if (process.env.RESEND_API_KEY) {
     try {
-      // Dynamically import render and the email component to avoid build-time issues
-      const { render } = await import('@react-email/render');
-      const { TarsWelcomeEmail } = await import('../../../emails/welcomeMail');
-      const emailHtml = await render(
-        React.createElement(TarsWelcomeEmail, { userFirstname })
-      );
-      console.log('Rendered email HTML:', emailHtml, typeof emailHtml);
-      if (typeof emailHtml !== 'string') {
-        throw new Error('Email HTML is not a string!');
-      }
+      // TEMP: Use plain HTML for debugging instead of React email component
+      const emailHtml = `<h1>Welcome, ${userFirstname}!</h1><p>Thank you for joining the TARS AI waitlist.</p>`;
       const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
