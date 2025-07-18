@@ -1,19 +1,22 @@
+
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import { Loader2, ArrowRight, User, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// The validation schema requires both name and a specific email format
 const waitlistSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email("Please enter a valid email address").refine((val: string) => val.endsWith("@gmail.com"), {
+    message: "Only @gmail.com emails are allowed",
+  }),
   name: z
     .string()
     .min(1, "Name is required")
-    .regex(/^[A-Za-z ]+$/, "Name can only contain letters and spaces"),
+    .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ''\- ]+$/, "Name can only contain letters, spaces, hyphens, and apostrophes"),
 });
 
 type WaitlistFormData = z.infer<typeof waitlistSchema>;
@@ -26,25 +29,26 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nameFocused, setNameFocused] = useState(false);
-  const [nameValue, setNameValue] = useState("");
   const [emailFocused, setEmailFocused] = useState(false);
-  const [emailValue, setEmailValue] = useState("");
-  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<WaitlistFormData>({
     resolver: zodResolver(waitlistSchema),
     defaultValues: {
-      name: ""
+      name: "",
+      email: ""
     }
   });
 
-  
+  const nameValue = watch("name");
+  const emailValue = watch("email");
 
+  // This function is called by handleSubmit only after successful validation
   const onSubmit = async (data: WaitlistFormData) => {
     setIsSubmitting(true);
     setError(null);
@@ -58,15 +62,15 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         body: JSON.stringify(data),
       });
 
+      const result = await response.json();
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to join waitlist");
+        throw new Error(result.message || "Failed to join waitlist");
       }
 
-      const result = await response.json();
       onSuccess({
         email: result.email,
-        name: data.name,
+        name: result.name,
         id: result.id,
         position: result.position,
       });
@@ -83,9 +87,12 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-full max-w-lg mx-auto space-y-4"
+      className="w-full max-w-xs sm:max-w-sm mx-auto space-y-3"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-stretch gap-5 font-urbanist w-full max-w-md mx-auto">
+      {/* The form uses `handleSubmit` which handles validation before calling `onSubmit` */}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-stretch gap-3 font-urbanist w-full max-w-xs sm:max-w-sm mx-auto">
+        
+        {/* Name Input Field */}
         <div className="relative w-full">
           <span
             className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-all duration-200
@@ -96,30 +103,17 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           </span>
           <input
             type="text"
-            placeholder="Full name..."
-            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-12 pl-12 pr-4 transition-all duration-200 font-urbanist text-base sm:text-lg rounded-xl w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
+            placeholder="Your Name"
+            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-10 pl-10 pr-3 transition-all duration-200 font-urbanist text-sm sm:text-base rounded-lg w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
             style={{ WebkitBoxShadow: '0 0 0 1000px #101010 inset', boxShadow: '0 0 0 1000px #101010 inset', WebkitTextFillColor: 'white' }}
-            {...register("name", { required: true })}
+            {...register("name")}
             autoComplete="off"
-            disabled={isSubmitting}
             onFocus={() => setNameFocused(true)}
             onBlur={() => setNameFocused(false)}
-            onChange={e => setNameValue(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                if (nameValue.trim().length > 0) {
-                  emailInputRef.current?.focus();
-                }
-              } else if (!/^[a-zA-Z ]$/.test(e.key) && e.key.length === 1) {
-                e.preventDefault();
-              }
-            }}
           />
         </div>
-        {errors.name && (
-          <div className="text-red-400 text-xs mt-1 ml-2">{errors.name.message}</div>
-        )}
+
+        {/* Email Input Field */}
         <div className="relative w-full">
           <span
             className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-all duration-200
@@ -131,25 +125,20 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           <input
             type="email"
             placeholder="Email Address"
-            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-12 pl-12 pr-4 transition-all duration-200 font-urbanist text-base sm:text-lg rounded-xl w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
+            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-10 pl-10 pr-3 transition-all duration-200 font-urbanist text-sm sm:text-base rounded-lg w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
             style={{ WebkitBoxShadow: '0 0 0 1000px #101010 inset', boxShadow: '0 0 0 1000px #101010 inset', WebkitTextFillColor: 'white' }}
             {...register("email")}
             autoComplete="off"
-            ref={emailInputRef}
             onFocus={() => setEmailFocused(true)}
             onBlur={() => setEmailFocused(false)}
-            onChange={e => setEmailValue(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter" && (!nameValue.trim() || !emailValue.trim())) {
-                e.preventDefault(); // Prevent submit if either field is empty
-              }
-            }}
           />
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-[#23232b] to-[#18181f] px-4 py-1 text-white font-medium font-urbanist text-base sm:text-lg transition-all duration-200 border-none focus:outline-none w-full shadow-md mt-2"
+          className="group relative inline-flex h-10 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-r from-[#23232b] to-[#18181f] px-3 py-1 text-white font-medium font-urbanist text-sm sm:text-base transition-all duration-200 border-none focus:outline-none w-full shadow-md mt-2"
         >
           <span className="inline-flex items-center justify-center h-full w-full cursor-pointer space-x-2 relative z-10 transition-all duration-200">
             {isSubmitting ? (
@@ -163,19 +152,20 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           </span>
         </button>
       </form>
-      {/* Error Message */}
+      
+      {/* Error Message Display */}
       <AnimatePresence>
-        {(error || errors.email) && (
+        {(error || errors.name || errors.email) && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className="text-red-400 text-sm text-center relative z-10"
           >
-            {error || errors.email?.message}
+            {error || errors.name?.message || errors.email?.message}
           </motion.div>
         )}
       </AnimatePresence>
     </motion.div>
   );
-}  
+}

@@ -8,10 +8,12 @@ export const dynamic = "force-dynamic";
 const prisma = new PrismaClient();
 
 const waitlistSchema = z.object({
-  email: z.string().email().refine((val: string) => val.endsWith("@gmail.com"), {
+  email: z.string().email({ message: "Please enter a valid email address" }).refine((val: string) => val.endsWith("@gmail.com"), {
     message: "Only @gmail.com emails are allowed",
   }),
-  name: z.string().min(1, "Name is required").regex(/^[A-Za-z ]+$/, "Name can only contain letters and spaces"),
+  name: z.string()
+    .min(1, "Name is required")
+    .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ'’\- ]+$/, "Name can only contain letters, spaces, hyphens, and apostrophes"),
 });
 
 const rateLimitMap = new Map<string, number[]>();
@@ -21,12 +23,15 @@ const WINDOW_MS = 60 * 1000; // 1 minute
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const timestamps = rateLimitMap.get(ip) || [];
+  
   // Remove timestamps older than 1 minute
   const recent = timestamps.filter(ts => now - ts < WINDOW_MS);
+  
   if (recent.length >= RATE_LIMIT) {
     rateLimitMap.set(ip, recent);
     return true;
   }
+  
   recent.push(now);
   rateLimitMap.set(ip, recent);
   return false;

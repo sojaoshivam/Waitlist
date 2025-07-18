@@ -65,14 +65,12 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
     <div className="w-full flex items-center justify-center py-8">
       <motion.div
         ref={cardRef}
-        className="relative rounded-[32px] overflow-hidden"
+        className="relative rounded-[32px] overflow-hidden bg-[#101010]/80 flex flex-col gap-6"
         style={{
-          width: "360px",
+          width: "420px",
           minHeight: "480px",
           transformStyle: "preserve-3d",
-          backgroundColor: "#0e131f",
-          boxShadow:
-            "0 -10px 100px 10px rgba(78, 99, 255, 0.25), 0 0 10px 0 rgba(0, 0, 0, 0.5)",
+          backgroundColor: "#101010cc", // 80% opacity
           perspective: 1000,
         }}
         initial={{ y: 0 }}
@@ -89,7 +87,7 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
         {/* Close button */}
         <button
           onClick={onReset}
-          className="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-white text-black text-xl font-bold shadow transition"
+          className="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center text-white text-xl font-bold transition"
           aria-label="Close"
           type="button"
         >
@@ -105,18 +103,18 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
           </div>
         </div>
         {/* Main message */}
-        <div className="flex flex-col items-center justify-center px-6 pb-2">
-          <h2 className="text-2xl font-extrabold text-center text-black dark:text-white mb-2">
+        <div className="flex flex-col items-center justify-center px-6 pb-2 gap-2">
+          <h2 className="text-2xl font-extrabold text-center text-white mb-2">
             You have been added to our <span className="text-green-500">waitlist!</span>
           </h2>
-          <p className="text-neutral-600 dark:text-neutral-300 text-center text-base mb-4">
+          <p className="text-white text-center text-base  mt-4 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] max-w-[270px] mx-auto">
             Thank you for joining, you&apos;ll be the first to know when we are ready!
           </p>
         </div>
         {/* Tell your friends section (unchanged) */}
-        <div className="w-full flex flex-col items-center mb-8">
+        <div className="w-full flex flex-col items-center mb-8 mt-6">
           <div className="text-neutral-200 text-base font-urbanist mb-3 text-center tracking-wide font-semibold">Tell your friends</div>
-          <div className="flex flex-row gap-5 justify-center">
+          <div className="flex flex-row gap-4 justify-center">
             <Button
               onClick={() => handleShare('twitter')}
               className="bg-white/20 hover:bg-teal-500/30 transition-all duration-200 rounded-full p-3 shadow-lg backdrop-blur-md flex items-center justify-center"
@@ -125,7 +123,7 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
               style={{ boxShadow: '0 2px 8px 0 rgba(56,189,248,0.15)' }}
             >
               {/* Custom X (Twitter) SVG */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-blue-400 group-hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-white group-hover:text-white transition">
                 <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
               </svg>
             </Button>
@@ -137,7 +135,7 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
               style={{ boxShadow: '0 2px 8px 0 rgba(59,130,246,0.15)' }}
             >
               {/* Custom filled LinkedIn SVG */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-blue-500 group-hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-white group-hover:text-white transition">
                 <path d="M1.146 1.146C.417 1.875.417 3.042 1.146 3.77c.729.729 1.896.729 2.625 0 .729-.728.729-1.895 0-2.624-.729-.729-1.896-.729-2.625 0zM.5 5.5h3V15h-3V5.5zm4.5 0h2.857v1.303h.041c.398-.755 1.37-1.553 2.822-1.553C14.5 5.25 15 7.042 15 9.25V15h-3V9.75c0-1.25-.022-2.857-1.75-2.857-1.75 0-2.021 1.367-2.021 2.778V15h-3V5.5z"/>
               </svg>
             </Button>
@@ -148,7 +146,7 @@ export function SuccessMessage({ data, onReset }: SuccessMessageProps) {
               aria-label="Share"
               style={{ boxShadow: '0 2px 8px 0 rgba(156,163,175,0.15)' }}
             >
-              <Share2 className="h-6 w-6 fill-current text-neutral-400 group-hover:text-white transition" fill="currentColor" />
+              <Share2 className="h-6 w-6 fill-current text-white group-hover:text-white transition" fill="currentColor" />
             </Button>
           </div>
         </div>

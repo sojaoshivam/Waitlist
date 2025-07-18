@@ -53,7 +53,7 @@ function FAQSection() {
                   Got questions? We&apos;ve got answers
                 </h4>
                 <p className="text-lg max-w-xl lg:max-w-lg leading-relaxed tracking-tight text-neutral-400 text-left">
-                  Everything you need to know about joining the TARS AI waitlist and what to expect when we launch. Can&apos;t find what you&apos;re looking for? Reach out to us directly.
+                   Can&apos;t find what you&apos;re looking for? Reach out to us directly.
                 </p>
               </div>
               <a

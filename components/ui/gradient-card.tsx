@@ -6,10 +6,11 @@ import { ReactNode } from "react";
 interface FeatureCardProps {
   icon: ReactNode;
   title: ReactNode;
+  description: ReactNode;
   delay?: number;
 }
 
-export const FeatureCard = ({ icon, title, delay = 0 }: FeatureCardProps) => {
+export const FeatureCard = ({ icon, title, description, delay = 0 }: FeatureCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
@@ -33,10 +34,9 @@ export const FeatureCard = ({ icon, title, delay = 0 }: FeatureCardProps) => {
   return (
     <motion.div
       ref={cardRef}
-      className="relative rounded-2xl overflow-visible flex flex-col sm:items-center items-start px-0 py-0 mx-4 sm:mx-0 min-w-[90vw] max-w-[400px] w-full min-h-[90px] h-auto sm:min-w-[320px] sm:min-h-[320px] sm:w-full sm:max-w-[400px] sm:h-full bg-[#18181f] text-white"
+      className="relative rounded-2xl overflow-visible flex flex-col items-center px-0 py-0 mx-4 sm:mx-0 w-full max-w-xl min-h-[60px] h-auto sm:min-h-[220px] sm:h-full bg-[#101010]/80 text-white"
       style={{
-        boxShadow:
-          "0 -10px 100px 10px rgba(78, 99, 255, 0.10), 0 0 10px 0 rgba(0, 0, 0, 0.5)",
+        // No boxShadow
         transformStyle: "preserve-3d",
         perspective: 1000,
       }}
@@ -47,7 +47,6 @@ export const FeatureCard = ({ icon, title, delay = 0 }: FeatureCardProps) => {
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
     >
-      {/* Icon and title layout: row on mobile, floating above on desktop */}
       <div className="w-full">
         {/* Desktop: floating icon above card */}
         <motion.div
@@ -58,30 +57,29 @@ export const FeatureCard = ({ icon, title, delay = 0 }: FeatureCardProps) => {
             {icon}
           </div>
         </motion.div>
-        {/* Card content area: tighter spacing, more vertical fill */}
-        <div className="flex flex-row items-center pt-4 pl-4 sm:pl-0 sm:pt-10 pb-6 sm:flex-col sm:items-center sm:justify-center sm:px-6">
+        {/* Card content area: row on mobile, column on md+ */}
+        <div className="flex flex-row md:flex-col items-center justify-center pt-4 md:pt-10 pb-1 md:pb-2 px-2 md:px-6 gap-3 md:gap-0">
           <motion.div
-            className="relative z-20 flex-shrink-0 sm:hidden"
+            className="relative z-20 flex-shrink-0 sm:hidden mb-0 md:mb-2"
             style={{ pointerEvents: "none" }}
           >
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 shadow-lg border border-neutral-300">
+            <div className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-neutral-200 shadow-lg border border-neutral-300">
               {icon}
             </div>
           </motion.div>
           <motion.div
-            className="text-white text-lg sm:text-2xl font-bold text-left sm:text-center leading-tight select-none ml-4 sm:ml-0 sm:ml-0 mt-0 sm:mt-2 overflow-hidden whitespace-nowrap text-ellipsis sm:whitespace-normal sm:text-center sm:break-words"
+            className="text-white text-base md:text-xl font-semibold text-left md:text-center leading-tight select-none mt-0 md:mt-2 overflow-hidden whitespace-nowrap text-ellipsis md:whitespace-normal md:break-words flex-1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay }}
           >
-            <h3 className="truncate sm:whitespace-normal sm:break-words sm:text-center">{title}</h3>
-            <div className="text-xs sm:text-base text-neutral-400 mt-1 sm:mt-2 whitespace-normal leading-snug sm:text-center sm:break-words sm:h-[4.5em] sm:overflow-hidden text-justify">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+            <h3 className="truncate md:whitespace-normal md:break-words md:text-center font-normal">{title}</h3>
+            <div className="text-xs md:text-sm text-neutral-400 mt-1 md:mt-2 whitespace-normal leading-snug md:text-center md:break-words md:h-[4.5em] md:overflow-hidden text-left md:text-center">
+              {description}
             </div>
           </motion.div>
         </div>
       </div>
-      {/* Removed all glowing/blurred overlays here */}
     </motion.div>
   );
 };
