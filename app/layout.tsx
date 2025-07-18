@@ -6,8 +6,8 @@ import Head from 'next/head';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Tars AI - Turning Archives into Answers',
-  description: 'Join the waitlist for Tars AI .',
+  title: 'TARS AI – AI Chatbot for PDFs | Chat with Your Documents | Document Intelligence Platform',
+  description: 'Join the waitlist for TARS AI, the Interstellar-inspired AI document assistant. Chat with your PDFs, search documents with AI, and boost productivity with a secure, multilingual, RAG-based knowledge assistant for teams and enterprises.',
 };
 
 export default function RootLayout({
@@ -19,11 +19,21 @@ export default function RootLayout({
     <html lang="en">
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="TARS AI – AI Chatbot for PDFs | Chat with Your Documents" />
+        <meta property="og:description" content="Join the waitlist for TARS AI, the Interstellar-inspired AI document assistant. Chat with your PDFs, search documents with AI, and boost productivity with a secure, multilingual, RAG-based knowledge assistant for teams and enterprises." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tarsai.com" />
+        <meta property="og:image" content="/favicon.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="TARS AI – AI Chatbot for PDFs | Chat with Your Documents" />
+        <meta name="twitter:description" content="Join the waitlist for TARS AI, the Interstellar-inspired AI document assistant. Chat with your PDFs, search documents with AI, and boost productivity with a secure, multilingual, RAG-based knowledge assistant for teams and enterprises." />
+        <meta name="twitter:image" content="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
       </Head>
       <body className={inter.className}>{children}</body>
     </html>

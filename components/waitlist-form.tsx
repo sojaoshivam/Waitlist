@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight, User, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const waitlistSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  name: z.string().min(1, "Name is required"),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .regex(/^[A-Za-z ]+$/, "Name can only contain letters and spaces"),
 });
 
 type WaitlistFormData = z.infer<typeof waitlistSchema>;
@@ -22,6 +25,11 @@ interface WaitlistFormProps {
 export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nameFocused, setNameFocused] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -31,9 +39,11 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   } = useForm<WaitlistFormData>({
     resolver: zodResolver(waitlistSchema),
     defaultValues: {
-      name: "User"
+      name: ""
     }
   });
+
+  
 
   const onSubmit = async (data: WaitlistFormData) => {
     setIsSubmitting(true);
@@ -75,30 +85,79 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       transition={{ duration: 0.6 }}
       className="w-full max-w-lg mx-auto space-y-4"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 font-urbanist w-full">
-        {/* Hidden name field with default value */}
-        <input type="hidden" {...register("name" )} />
-        {/* Email Input */}
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="rounded-full border border-transparent focus:ring-2 focus:ring-teal-500 w-full relative z-10 mt-2 sm:mt-4 bg-neutral-950 placeholder:text-neutral-700 h-12 px-6 text-white outline-none transition-all duration-300 font-urbanist text-base sm:text-lg"
-          {...register("email")}
-        />
-        {/* Submit Button */}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-stretch gap-5 font-urbanist w-full max-w-md mx-auto">
+        <div className="relative w-full">
+          <span
+            className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-all duration-200
+              ${nameFocused || nameValue ? 'scale-125 text-[#E0E0E0] drop-shadow-[0_0_6px_#E0E0E0]' : 'text-neutral-500 scale-100'}`}
+            style={{ zIndex: 2 }}
+          >
+            <User className="h-5 w-5" style={{ background: 'none' }} />
+          </span>
+          <input
+            type="text"
+            placeholder="Full name..."
+            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-12 pl-12 pr-4 transition-all duration-200 font-urbanist text-base sm:text-lg rounded-xl w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
+            style={{ WebkitBoxShadow: '0 0 0 1000px #101010 inset', boxShadow: '0 0 0 1000px #101010 inset', WebkitTextFillColor: 'white' }}
+            {...register("name", { required: true })}
+            autoComplete="off"
+            disabled={isSubmitting}
+            onFocus={() => setNameFocused(true)}
+            onBlur={() => setNameFocused(false)}
+            onChange={e => setNameValue(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (nameValue.trim().length > 0) {
+                  emailInputRef.current?.focus();
+                }
+              } else if (!/^[a-zA-Z ]$/.test(e.key) && e.key.length === 1) {
+                e.preventDefault();
+              }
+            }}
+          />
+        </div>
+        {errors.name && (
+          <div className="text-red-400 text-xs mt-1 ml-2">{errors.name.message}</div>
+        )}
+        <div className="relative w-full">
+          <span
+            className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-all duration-200
+              ${emailFocused || emailValue ? 'scale-125 text-[#E0E0E0] drop-shadow-[0_0_6px_#E0E0E0]' : 'text-neutral-500 scale-100'}`}
+            style={{ zIndex: 2 }}
+          >
+            <Mail className="h-5 w-5" style={{ background: 'none' }} />
+          </span>
+          <input
+            type="email"
+            placeholder="Email Address"
+            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-12 pl-12 pr-4 transition-all duration-200 font-urbanist text-base sm:text-lg rounded-xl w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
+            style={{ WebkitBoxShadow: '0 0 0 1000px #101010 inset', boxShadow: '0 0 0 1000px #101010 inset', WebkitTextFillColor: 'white' }}
+            {...register("email")}
+            autoComplete="off"
+            ref={emailInputRef}
+            onFocus={() => setEmailFocused(true)}
+            onBlur={() => setEmailFocused(false)}
+            onChange={e => setEmailValue(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter" && (!nameValue.trim() || !emailValue.trim())) {
+                e.preventDefault(); // Prevent submit if either field is empty
+              }
+            }}
+          />
+        </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 mt-2 sm:mt-4 w-full sm:w-auto"
+          className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-[#23232b] to-[#18181f] px-4 py-1 text-white font-medium font-urbanist text-base sm:text-lg transition-all duration-200 border-none focus:outline-none w-full shadow-md mt-2"
         >
-          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-6 py-1 text-base font-medium text-white backdrop-blur-3xl space-x-2 relative z-10">
+          <span className="inline-flex items-center justify-center h-full w-full cursor-pointer space-x-2 relative z-10 transition-all duration-200">
             {isSubmitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
-                <span>Join</span>
-                <ArrowRight className="h-4 w-4" />
+                <span className="transition-all duration-150 group-active:scale-105 group-active:text-[#E0E0E0]">Join the waitlist</span>
+                <ArrowRight className="h-4 w-4 ml-2 transition-all duration-150 group-active:scale-125 group-active:text-[#E0E0E0]" />
               </>
             )}
           </span>
@@ -119,4 +178,4 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       </AnimatePresence>
     </motion.div>
   );
-}
+}  

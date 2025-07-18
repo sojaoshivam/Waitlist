@@ -11,6 +11,7 @@ const waitlistSchema = z.object({
   email: z.string().email().refine((val: string) => val.endsWith("@gmail.com"), {
     message: "Only @gmail.com emails are allowed",
   }),
+  name: z.string().min(1, "Name is required").regex(/^[A-Za-z ]+$/, "Name can only contain letters and spaces"),
 });
 
 const rateLimitMap = new Map<string, number[]>();
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = waitlistSchema.parse(body);
-    const userFirstname = typeof body.name === 'string' ? body.name : 'there';
+    const userFirstname = validatedData.name;
 
     // Check if email already exists
     const existingEntry = await prisma.waitlistEntry.findUnique({
@@ -59,6 +60,7 @@ export async function POST(request: NextRequest) {
     const newEntry = await prisma.waitlistEntry.create({
       data: {
         email: validatedData.email,
+        name: userFirstname, // Store the entered name
       },
     });
 
