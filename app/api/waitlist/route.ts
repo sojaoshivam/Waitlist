@@ -81,8 +81,37 @@ export async function POST(request: NextRequest) {
     // Send confirmation email using Resend
    if (process.env.RESEND_API_KEY) {
     try {
-      // TEMP: Use plain HTML for debugging instead of React email component
-      const emailHtml = `<h1>Welcome, ${userFirstname}!</h1><p>Thank you for joining the TARS AI waitlist.</p>`;
+      // Use full branded HTML template for the email
+      const emailHtml = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to TARS AI</title>
+  </head>
+  <body style="background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',sans-serif;">
+    <div style="margin:0 auto;padding:20px 0 48px;">
+      <img src="https://tarsai.live/static/tars-logo.png" width="170" height="50" alt="TARS AI" style="margin:0 auto;" />
+      <p style="font-size:16px;line-height:26px;">Hi ${userFirstname},</p>
+      <p style="font-size:16px;line-height:26px;">
+        Welcome to <b>TARS AI</b>, the document intelligence platform that transforms complex archives into accessible, actionable knowledge—empowering you to search, discover, and gain insights effortlessly.
+      </p>
+      <div style="text-align:center;">
+        <a href="https://tarsai.live" style="background-color:#393BB2;border-radius:3px;color:#fff;font-size:16px;text-decoration:none;text-align:center;display:block;padding:12px;">Get Started with TARS AI</a>
+      </div>
+      <p style="font-size:16px;line-height:26px;">
+        We're excited to have you on board!<br />
+        The TARS AI Team
+      </p>
+      <hr style="border-color:#cccccc;margin:20px 0;" />
+      <p style="color:#8898aa;font-size:12px;">
+        TARS AI, Udaipur, Rajasthan, India<br />
+        You're receiving this email because you joined the TARS AI waitlist.
+      </p>
+    </div>
+  </body>
+</html>
+`;
       const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
