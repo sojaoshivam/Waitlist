@@ -1,3 +1,18 @@
+# robots.txt for https://tarsai.live
+# Allow all search engines to crawl everything
 User-agent: *
 Allow: /
-Sitemap: https://tarsai.live/sitemap.xml 
+
+# Sitemap location
+Sitemap: https://tarsai.live/sitemap.xml
+
+# Disallow crawling of sensitive or non-public paths (uncomment if needed)
+# Disallow: /admin/
+# Disallow: /api/
+# Disallow: /private/
+
+# Crawl-delay for aggressive bots (optional, uncomment if needed)
+# Crawl-delay: 5
+
+# Host directive (optional, for Yandex and some others)
+# Host: https://tarsai.live 

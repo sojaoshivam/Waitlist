@@ -39,8 +39,8 @@ function FAQSection() {
   const itemRefs = faqData.map(() => useRef<HTMLDivElement>(null));
 
   useEffect(() => {
-    if (openIndex !== null && itemRefs[openIndex]?.current) {
-      itemRefs[openIndex].current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (openIndex !== null) {
+      itemRefs[openIndex]?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [openIndex]);
 
