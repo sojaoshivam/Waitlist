@@ -34,15 +34,16 @@ export const FeatureCard = ({ icon, title, description, delay = 0 }: FeatureCard
   return (
     <motion.div
       ref={cardRef}
-      className="relative rounded-2xl overflow-visible flex flex-col items-center px-0 py-0 mx-4 sm:mx-0 w-full max-w-xl min-h-[60px] h-auto sm:min-h-[220px] sm:h-full bg-[#101010]/80 text-white"
+      className="relative rounded-2xl overflow-visible flex flex-col items-center px-0 py-0 mx-auto sm:mx-0 w-full max-w-xs sm:max-w-2xl min-h-[100px] h-auto sm:min-h-[280px] sm:h-full bg-[#101010]/80 text-white border border-primary/40 shadow-lg sm:mb-0 before:content-[''] before:absolute before:inset-0 before:rounded-2xl before:pointer-events-none before:z-0 before:border-2 before:border-white before:opacity-60 before:blur-xl transition-all duration-300"
       style={{
         // No boxShadow
         transformStyle: "preserve-3d",
         perspective: 1000,
       }}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay, ease: "easeOut" }}
+      initial={{ opacity: 0, y: 40, scale: 1, boxShadow: '0 4px 24px 0 rgba(0,0,0,0.18)' }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1, boxShadow: '0 4px 24px 0 rgba(0,0,0,0.18)' } : {}}
+      whileHover={{ scale: 1.07, y: -12, boxShadow: '0 12px 48px 0 rgba(128,128,128,0.35), 0 2px 8px 0 rgba(0,0,0,0.18)' }}
+      transition={{ type: 'spring', stiffness: 260, damping: 18, mass: 0.8 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
@@ -50,32 +51,44 @@ export const FeatureCard = ({ icon, title, description, delay = 0 }: FeatureCard
       <div className="w-full">
         {/* Desktop: floating icon above card */}
         <motion.div
-          className="hidden sm:flex absolute left-1/2 -translate-x-1/2 -top-8 z-20"
+          className="hidden sm:flex absolute left-1/2 -translate-x-1/2 -top-8 z-50"
           style={{ pointerEvents: "none" }}
         >
           <div className="flex items-center justify-center w-16 h-16 rounded-full bg-neutral-200 shadow-lg border border-neutral-300">
             {icon}
           </div>
         </motion.div>
-        {/* Card content area: row on mobile, column on md+ */}
-        <div className="flex flex-row md:flex-col items-center justify-center pt-4 md:pt-10 pb-1 md:pb-2 px-2 md:px-6 gap-3 md:gap-0">
+        {/* Card content area: icon left, title right on mobile; column on md+ */}
+        <div className="flex flex-row items-center justify-start pt-4 md:pt-10 pb-1 md:pb-2 px-2 md:px-6 gap-3 md:flex-col md:gap-0">
+          {/* Icon on the far left for mobile */}
           <motion.div
-            className="relative z-20 flex-shrink-0 sm:hidden mb-0 md:mb-2"
+            className="relative z-20 flex-shrink-0 sm:hidden md:mb-0"
             style={{ pointerEvents: "none" }}
           >
             <div className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-neutral-200 shadow-lg border border-neutral-300">
               {icon}
             </div>
           </motion.div>
+          {/* Title and description */}
           <motion.div
-            className="text-white text-base md:text-xl font-semibold text-left md:text-center leading-tight select-none mt-0 md:mt-2 overflow-hidden whitespace-nowrap text-ellipsis md:whitespace-normal md:break-words flex-1"
+            className="flex-1 flex flex-col justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay }}
           >
-            <h3 className="truncate md:whitespace-normal md:break-words md:text-center font-normal">{title}</h3>
-            <div className="text-xs md:text-sm text-neutral-400 mt-1 md:mt-2 whitespace-normal leading-snug md:text-center md:break-words md:h-[4.5em] md:overflow-hidden text-left md:text-center">
-              {description}
+            <h3 className="text-lg xs:text-xl sm:text-2xl md:text-2xl font-bold text-left md:text-center leading-tight select-none mt-0 md:mt-2 truncate md:whitespace-normal md:break-words">
+              {title}
+            </h3>
+            <div className="text-xs md:text-sm text-neutral-400 mt-1 md:mt-2 whitespace-normal leading-snug md:text-center md:break-words md:h-[4.5em] md:overflow-hidden text-left md:text-center font-normal overflow-x-hidden">
+              {/* Shorter description for mobile, full for desktop */}
+              <span className="block sm:hidden">
+                {typeof description === 'string'
+                  ? description.split('.')[0].split(',')[0] + '.'
+                  : description}
+              </span>
+              <span className="hidden sm:block">
+                {description}
+              </span>
             </div>
           </motion.div>
         </div>

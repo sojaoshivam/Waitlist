@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { WaitlistForm } from "@/components/waitlist-form";
 import { SuccessMessage } from "@/components/success-message";
 import { Bot, Sparkles, ArrowRight, Crown, MessageSquareQuoteIcon, FileSearch, Brain, Shield, Users, Check, TrendingUp, Instagram, Linkedin } from "lucide-react";
@@ -9,8 +8,11 @@ import { motion } from "framer-motion";
 import { FeatureCard } from "@/components/ui/gradient-card";
 import { useInView, motion as m } from "framer-motion";
 import ScrollToTopOnMount from "@/components/ScrollToTopOnMount";
-import FAQSection from "@/components/ui/faq-section";
+import dynamic from 'next/dynamic';
+const BackgroundBeams = dynamic(() => import('@/components/ui/background-beams').then(mod => mod.BackgroundBeams), { ssr: false });
+const FAQSection = dynamic(() => import('@/components/ui/faq-section'), { ssr: false });
 import { Container } from "@/components/ui/container";
+import Head from 'next/head';
 
 export default function Home() {
   const [successData, setSuccessData] = useState<{
@@ -84,26 +86,41 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>TARS AI – AI Chatbot for PDFs & Document Intelligence Platform</title>
+        <meta name="description" content="TARS AI is a smart, multilingual document assistant and AI chatbot for PDFs. Instantly search, chat, and get insights from your documents. Join the waitlist for early access!" />
+        <link rel="canonical" href="https://tarsai.live/" />
+        <meta property="og:title" content="TARS AI – AI Chatbot for PDFs & Document Intelligence Platform" />
+        <meta property="og:description" content="TARS AI is a smart, multilingual document assistant and AI chatbot for PDFs. Instantly search, chat, and get insights from your documents. Join the waitlist for early access!" />
+        <meta property="og:url" content="https://tarsai.live/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://tarsai.live/static/tars-logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="TARS AI – AI Chatbot for PDFs & Document Intelligence Platform" />
+        <meta name="twitter:description" content="TARS AI is a smart, multilingual document assistant and AI chatbot for PDFs. Instantly search, chat, and get insights from your documents. Join the waitlist for early access!" />
+        <meta name="twitter:image" content="https://tarsai.live/static/tars-logo.png" />
+      </Head>
       <ScrollToTopOnMount />
-      <div className="min-h-screen w-full bg-neutral-950 relative flex flex-col items-center justify-center antialiased overflow-hidden">
+      <main className="min-h-screen w-full bg-neutral-950 relative flex flex-col items-center justify-center antialiased overflow-hidden">
         <BackgroundBeams />
         <Container>
           <div className="main-content flex flex-col items-center w-full">
             <div id="hero-section" className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-16">
               <div className="text-center flex flex-col gap-6 sm:gap-10 md:gap-14">
                 {/* Header */}
+                <header>
                 <m.div
                   ref={headerRef}
                   initial={{ opacity: 0, y: 40 }}
                   animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="space-y-6 sm:space-y-8"
                 >
                   <m.div
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, ease: 'easeOut' }}
-                    className="mb-4 sm:mb-6 flex justify-center"
+                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    className="mt-20 mb-4 sm:mb-6 flex justify-center"
                   >
                     <motion.button
                       type="button"
@@ -119,41 +136,42 @@ export default function Home() {
                       >
                         <Crown style={{ color: '#E0E0E0', width: '0.9em', height: '0.9em', transition: 'color 0.2s' }} />
                       </motion.span>
-                      <span>Beyond Artificial</span>
+                      <span>Beyond Intelligence</span>
                     </motion.button>
                   </m.div>
                   <m.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                    className="relative z-10 text-3xl xs:text-5xl sm:text-8xl md:text-7xl lg:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600 text-center font-urbanist font-extrabold tracking-tight leading-tight drop-shadow-lg"
+                    transition={{ duration: 0.5, delay: 0.1, ease: "easeInOut" }}
+                    className="relative z-10 text-6xl xs:text-7xl sm:text-8xl md:text-8xl lg:text-8xl xl:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600 text-center font-urbanist font-extrabold tracking-tight leading-tight drop-shadow-lg"
                   >
                     TARS AI
                   </m.h1>
                   <m.h2
                     initial={{ opacity: 0, y: 20 }}
                     animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                    className="text-base xs:text-lg sm:text-xl md:text-2xl text-neutral-300 font-semibold mt-2"
+                    transition={{ duration: 0.5, delay: 0.2, ease: "easeInOut" }}
+                    className="text-base xs:text-lg sm:text-xl md:text-2xl text-neutral-300 font-semibold mt-1 whitespace-normal sm:whitespace-nowrap max-w-full"
                   >
-                    AI Chatbot for PDFs · Document Intelligence Platform
+                    AI Chatbot for PDFs · Document Intelligence Platform 
                   </m.h2>
                   <m.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                    className="text-neutral-400 max-w-lg mx-auto text-xs sm:text-sm leading-relaxed relative z-10 whitespace-nowrap overflow-hidden"
+                    transition={{ duration: 0.5, delay: 0.3, ease: "easeInOut" }}
+                    className="text-neutral-400 max-w-full px-1 xs:max-w-sm sm:max-w-lg mx-auto text-xs xs:text-sm font-light leading-relaxed relative z-10 whitespace-normal overflow-hidden"
                   >
                     Join the waitlist for TARS AI – the smart, multilingual document assistant.
                   </m.p>
                 </m.div>
+                </header>
 
                 {/* Waitlist Form or Success Message */}
                 <m.div
                   ref={formRef}
                   initial={{ opacity: 0, y: 40 }}
                   animate={formInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                  transition={{ duration: 0.5, delay: 0.2, ease: "easeInOut" }}
                   className="relative z-10 mt-4 mb-4 sm:mt-6 sm:mb-6"
                 >
                   {successData ? (
@@ -165,14 +183,15 @@ export default function Home() {
                   <div className="flex flex-col items-center mt-12 mb-0">
                     <div className="flex items-center gap-2 mb-1">
                       <div className="flex -space-x-3">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="user1" className="w-8 h-8 rounded-full border-2 border-black" />
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="user2" className="w-8 h-8 rounded-full border-2 border-black" />
-                        <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="user3" className="w-8 h-8 rounded-full border-2 border-black" />
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Indian user1" className="w-8 h-8 rounded-full border-2 border-black" />
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Indian user2" className="w-8 h-8 rounded-full border-2 border-black" />
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foreign user3" className="w-8 h-8 rounded-full border-2 border-black" />
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foreign user4" className="w-8 h-8 rounded-full border-2 border-black" />
                       </div>
                       <m.span
                         initial={{ opacity: 0, y: 20 }}
                         animate={formInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+                        transition={{ duration: 0.5, delay: 0.2, ease: 'easeInOut' }}
                         className="ml-3 text-xs sm:text-sm text-neutral-400 font-semibold tracking-wide"
                       >
                         Join others on the waitlist
@@ -186,7 +205,7 @@ export default function Home() {
             {/* Other content, hidden until timer elapses */}
             <div 
               style={{ 
-                transition: 'opacity 0.7s', 
+                transition: 'opacity 0.5s ease-in-out', 
                 opacity: showOtherContent ? 1 : 0, 
                 pointerEvents: showOtherContent ? 'auto' : 'none', 
                 height: showOtherContent ? 'auto' : 0, 
@@ -197,22 +216,22 @@ export default function Home() {
             >
               {/* Feature cards row */}
               <div ref={featuresRef} className="feature-cards-row w-full mt-20 sm:mt-16 md:mt-24 mb-8 sm:mb-12 md:mb-16">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-8 w-full max-w-7xl mx-auto justify-center">
                   {[
                     {
-                      icon: <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
-                      title: "Intelligent Document Analysis",
-                      description: "TARS AI analyzes your documents with advanced natural language processing, extracting key insights, summarizing content, and identifying important patterns automatically."
+                      icon: <FileSearch className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
+                      title: "Intelligent Analysis",
+                      description: "Analyze documents with advanced AI to extract key insights and summaries."
                     },
                     {
-                      icon: <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
+                      icon: <MessageSquareQuoteIcon className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
                       title: "Smart Q&A System",
-                      description: "Ask questions in natural language and get precise answers from your documents. TARS AI understands context and provides relevant information with source citations."
+                      description: "Ask questions in natural language and get instant, accurate answers."
                     },
                     {
-                      icon: <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
+                      icon: <FileSearch className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700 rotate-90" />,
                       title: "Multi-Format Support",
-                      description: "Works with PDFs, Word documents, presentations, spreadsheets, and more. Upload any document type and let TARS AI extract actionable intelligence."
+                      description: "Supports PDFs, Word, presentations, spreadsheets, and more."
                     }
                   ].map((feature, idx) => (
                     <m.div 
@@ -220,7 +239,7 @@ export default function Home() {
                       className="w-full"
                       initial={{ opacity: 0, y: 40 }}
                       animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.8, delay: 0.15 * idx + 0.2, ease: "easeOut" }}
+                      transition={{ duration: 0.5, delay: 0.15 * idx + 0.2, ease: "easeInOut" }}
                     >
                       <FeatureCard 
                         icon={feature.icon} 
@@ -247,13 +266,13 @@ export default function Home() {
                 ref={contactRef}
                 initial={{ opacity: 0, y: 40 }}
                 animate={contactInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+                transition={{ duration: 0.5, delay: 0.5, ease: "easeInOut" }}
                 className="w-full flex flex-col items-center justify-center mt-8 mb-0 sm:mt-16 sm:mb-0 px-2 sm:px-0"
               >
                 <m.div
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  transition={{ duration: 0.5, ease: 'easeInOut' }}
                   className="relative bg-[#101010]/80 rounded-[2.5rem] shadow-2xl max-w-2xl w-full px-2 sm:px-6 py-4 sm:py-8 flex flex-col items-center gap-8 font-urbanist"
                   style={{ boxShadow: '0 0 0 3px rgba(255,255,255,0.08), 0 2px 32px 0 rgba(0,0,0,0.25)' }}
                 >
@@ -268,7 +287,7 @@ export default function Home() {
                   <m.h2
                     initial={{ opacity: 0, y: 20 }}
                     animate={contactInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+                    transition={{ duration: 0.5, delay: 0.1, ease: 'easeInOut' }}
                     className="text-2xl sm:text-3xl font-extrabold text-white text-center mb-1"
                   >
                     Stay Connected!<br />Message Us &amp; Follow
@@ -340,11 +359,11 @@ export default function Home() {
               </m.div>
               
               {/* Footer - moved to appear right after Stay Connected card */}
-              <m.footer
+              <motion.footer
                 ref={footerRef}
                 initial={{ opacity: 0, y: 40 }}
                 animate={footerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+                transition={{ duration: 0.7, delay: 0.2, ease: "easeInOut" }}
                 className="w-full border-t border-white/10 mt-4 px-4 sm:px-6 md:px-8 py-4 sm:py-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-400 text-xs sm:text-sm z-10 transition-all duration-300"
                 style={{ minHeight: '64px' }}
               >
@@ -355,11 +374,11 @@ export default function Home() {
                 >
                   Back to Top
                 </button>
-              </m.footer>
+              </motion.footer>
             </div>
           </div>
         </Container>
-      </div>
+      </main>
     </>
   );
 }

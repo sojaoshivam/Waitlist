@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useRef, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import Head from 'next/head';
 
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -33,12 +35,39 @@ function FAQSection() {
     }
   ];
 
+  // Create refs for each FAQ item
+  const itemRefs = faqData.map(() => useRef<HTMLDivElement>(null));
+
+  useEffect(() => {
+    if (openIndex !== null && itemRefs[openIndex]?.current) {
+      itemRefs[openIndex].current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [openIndex]);
+
+  // Generate FAQPage JSON-LD
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': faqData.map(faq => ({
+      '@type': 'Question',
+      'name': faq.question,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': faq.answer
+      }
+    }))
+  };
+
   return (
-    <motion.div
+    <>
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      </Head>
+      <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: 0.7, ease: "easeInOut" }}
       className="w-full py-20 lg:py-40"
     >
       <div className="container mx-auto px-4">
@@ -60,7 +89,7 @@ function FAQSection() {
                 href="mailto:teammurph@tarsai.live"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-2 rounded-full bg-white text-black font-medium shadow transition-all border border-white/20 w-fit"
+                className="flex items-center gap-2 px-6 py-2 rounded-full bg-white text-black font-medium shadow transition-all border border-white/20 w-fit text-sm sm:text-base"
               >
                 <Mail className="w-5 h-5" />
                 Any questions? Reach out
@@ -75,7 +104,7 @@ function FAQSection() {
             }
           }}>
             {faqData.map((faq, index) => (
-              <AccordionItem key={index} value={`faq-${index}`} className="border-white/10">
+              <AccordionItem key={index} value={`faq-${index}`} className="border-white/10" ref={itemRefs[index]}>
                 <AccordionTrigger className="text-white hover:text-neutral-300 text-left">
                   {faq.question}
                 </AccordionTrigger>
@@ -87,7 +116,7 @@ function FAQSection() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
                         className="text-neutral-400 break-words px-4 py-3 md:px-6 md:py-4 overflow-hidden"
                       >
                         {faq.answer}
@@ -101,6 +130,7 @@ function FAQSection() {
         </div>
       </div>
     </motion.div>
+    </>
   );
 }
 

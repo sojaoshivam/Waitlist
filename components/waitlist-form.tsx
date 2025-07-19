@@ -104,7 +104,7 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           <input
             type="text"
             placeholder="Your Name"
-            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-10 pl-10 pr-3 transition-all duration-200 font-urbanist text-sm sm:text-base rounded-lg w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
+            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-10 pl-12 pr-3 transition-all duration-200 font-urbanist text-sm sm:text-base rounded-lg w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
             style={{ WebkitBoxShadow: '0 0 0 1000px #101010 inset', boxShadow: '0 0 0 1000px #101010 inset', WebkitTextFillColor: 'white' }}
             {...register("name")}
             autoComplete="off"
@@ -125,7 +125,7 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           <input
             type="email"
             placeholder="Email Address"
-            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-10 pl-10 pr-3 transition-all duration-200 font-urbanist text-sm sm:text-base rounded-lg w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
+            className="bg-neutral-950 placeholder:text-neutral-400 placeholder:font-light placeholder:opacity-40 text-white h-10 pl-12 pr-3 transition-all duration-200 font-urbanist text-sm sm:text-base rounded-lg w-full border-none focus:border-none focus:ring-0 focus:outline-none shadow-md"
             style={{ WebkitBoxShadow: '0 0 0 1000px #101010 inset', boxShadow: '0 0 0 1000px #101010 inset', WebkitTextFillColor: 'white' }}
             {...register("email")}
             autoComplete="off"
