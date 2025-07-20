@@ -86,7 +86,7 @@ function FAQSection() {
                 </p>
               </div>
               <a
-                href="mailto:teammurph@tarsai.live"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=teammurph@tarsai.live"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-2 rounded-full bg-white text-black font-medium shadow transition-all border border-white/20 w-fit text-sm sm:text-base"

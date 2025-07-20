@@ -21,7 +21,7 @@ export default function Home() {
     id: number;
     position: number;
   } | null>(null);
-  const [showOtherContent, setShowOtherContent] = useState(false);
+  const [showOtherContent, setShowOtherContent] = useState(true);
   
   // Ref for the full name input
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -79,11 +79,6 @@ export default function Home() {
     return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowOtherContent(true), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <>
       <Head>
@@ -111,7 +106,7 @@ export default function Home() {
                 <header>
                 <m.div
                   ref={headerRef}
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={false}
                   animate={headerInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="space-y-6 sm:space-y-8"
@@ -205,176 +200,175 @@ export default function Home() {
             {/* Other content, hidden until timer elapses */}
             <div 
               style={{ 
+                minHeight: '600px', // adjust to expected content height
                 transition: 'opacity 0.5s ease-in-out', 
                 opacity: showOtherContent ? 1 : 0, 
                 pointerEvents: showOtherContent ? 'auto' : 'none', 
-                height: showOtherContent ? 'auto' : 0, 
-                overflow: showOtherContent ? 'visible' : 'hidden'
-                
+                overflow: 'hidden',
               }}
               className="mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 other-content gap-8 flex flex-col"
             >
-              {/* Feature cards row */}
-              <div ref={featuresRef} className="feature-cards-row w-full mt-20 sm:mt-16 md:mt-24 mb-8 sm:mb-12 md:mb-16">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-8 w-full max-w-7xl mx-auto justify-center">
-                  {[
-                    {
-                      icon: <FileSearch className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
-                      title: "Intelligent Analysis",
-                      description: "Analyze documents with advanced AI to extract key insights and summaries."
-                    },
-                    {
-                      icon: <MessageSquareQuoteIcon className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
-                      title: "Smart Q&A System",
-                      description: "Ask questions in natural language and get instant, accurate answers."
-                    },
-                    {
-                      icon: <FileSearch className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700 rotate-90" />,
-                      title: "Multi-Format Support",
-                      description: "Supports PDFs, Word, presentations, spreadsheets, and more."
-                    }
-                  ].map((feature, idx) => (
-                    <m.div 
-                      key={idx} 
-                      className="w-full"
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.15 * idx + 0.2, ease: "easeInOut" }}
-                    >
-                      <FeatureCard 
-                        icon={feature.icon} 
-                        title={feature.title} 
-                        description={feature.description} 
-                        delay={0.15 * idx + 0.2} 
-                      />
-                    </m.div>
-                  ))}
+              {!showOtherContent ? (
+                <div style={{height: '100%', width: '100%'}} className="flex items-center justify-center">
+                  <div className="animate-pulse w-full h-32 bg-neutral-800 rounded-xl" />
                 </div>
-              </div>
-
-
-              {/* FAQ Section */}
-              <div
-                ref={faqRef}
-                className="mt-8 mb-8 sm:mt-16 sm:mb-16 px-2 sm:px-0"
-              >
-                <FAQSection />
-              </div>
-              
-              {/* Contact & Social Card Section */}
-              <m.div
-                ref={contactRef}
-                initial={{ opacity: 0, y: 40 }}
-                animate={contactInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.5, ease: "easeInOut" }}
-                className="w-full flex flex-col items-center justify-center mt-8 mb-0 sm:mt-16 sm:mb-0 px-2 sm:px-0"
-              >
-                <m.div
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  className="relative bg-[#101010]/80 rounded-[2.5rem] shadow-2xl max-w-2xl w-full px-2 sm:px-6 py-4 sm:py-8 flex flex-col items-center gap-8 font-urbanist"
-                  style={{ boxShadow: '0 0 0 3px rgba(255,255,255,0.08), 0 2px 32px 0 rgba(0,0,0,0.25)' }}
-                >
-                  {/* Top icon */}
-                  <div className="flex items-center justify-center w-20 h-20 rounded-full bg-neutral-200 mb-6 relative group transition-all duration-300">
-                    <span className="absolute inset-0 rounded-full bg-blue-400 opacity-30 blur-xl transition-all duration-300 group-hover:opacity-60 group-hover:blur-2xl" style={{ zIndex: 0 }} />
-                    <span className="relative z-10 flex items-center justify-center w-full h-full">
-                      <MessageSquareQuoteIcon className="h-10 w-10 text-black transition-all duration-300 group-hover:scale-110" />
-                    </span>
-                  </div>
-                  {/* Heading */}
-                  <m.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={contactInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.1, ease: 'easeInOut' }}
-                    className="text-2xl sm:text-3xl font-extrabold text-white text-center mb-1"
-                  >
-                    Stay Connected!<br />Message Us &amp; Follow
-                  </m.h2>
-                  {/* Subtext */}
-                  <p className="text-neutral-300 text-center mb-7 max-w-md">Send us a message and follow us for the latest updates, news, and exclusive insights!</p>
-                  {/* Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                    <motion.a
-                      href="https://mail.google.com/mail/?view=cm&fs=1&to=teammurph@tarsai.live"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-6 py-2 rounded-full bg-white text-black font-medium shadow hover:scale-105 transition-all border border-white/20"
-                      whileHover={{ scale: 1.07 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-.876 1.795l-7.5 5.625a2.25 2.25 0 01-2.748 0l-7.5-5.625A2.25 2.25 0 012.25 6.993V6.75" />
-                      </svg>
-                      Write Us
-                    </motion.a>
-                    <motion.button
-                      type="button"
-                      onClick={() => {
-                        // Try to focus and scroll to the name input by ref or fallback to querySelector
-                        let input: HTMLInputElement | null = null;
-                        if (nameInputRef && nameInputRef.current) {
-                          input = nameInputRef.current;
-                        } else {
-                          input = document.querySelector('input[placeholder="Your Name"]') as HTMLInputElement;
+              ) : (
+                <>
+                  {/* Feature cards row */}
+                  <div ref={featuresRef} className="feature-cards-row w-full mt-20 sm:mt-16 md:mt-24 mb-8 sm:mb-12 md:mb-16">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-8 w-full max-w-4xl mx-auto justify-center">
+                      {[
+                        {
+                          icon: <FileSearch className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
+                          title: "Intelligent Analysis",
+                          description: "Analyze documents with advanced AI to extract key insights and summaries."
+                        },
+                        {
+                          icon: <MessageSquareQuoteIcon className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700" />,
+                          title: "Smart Q&A System",
+                          description: "Ask questions in natural language and get instant, accurate answers."
+                        },
+                        {
+                          icon: <FileSearch className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-700 rotate-90" />,
+                          title: "Multi-Format Support",
+                          description: "Supports PDFs, Word, presentations, spreadsheets, and more."
                         }
-                        if (input) {
-                          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          setTimeout(() => input && input.focus(), 1000);
-                        }
-                      }}
-                      className="flex items-center gap-2 px-6 py-2 rounded-full bg-[#18181f] text-white font-medium shadow hover:scale-105 transition-all border border-white/10"
-                      whileHover={{ scale: 1.07 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                      Join Waitlist
-                    </motion.button>
-                  </div>
-                  {/* Social icons */}
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-neutral-400 text-sm mb-1">Follow Us</span>
-                    <div className="flex gap-4">
-                      {/* Twitter - white icon */}
-                      <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#18181f] border border-white/10 text-white hover:bg-neutral-400 hover:text-white transition-all" title="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-white group-hover:text-white transition">
-                          <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
-                        </svg>
-                      </a>
-                      {/* LinkedIn - Lucide icon */}
-                      <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#18181f] border border-white/10 text-white hover:bg-blue-500 hover:text-white transition-all" title="LinkedIn">
-                        <Linkedin className="h-6 w-6" />
-                      </a>
-                      {/* Instagram - Lucide icon */}
-                      <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#18181f] border border-white/10 text-white hover:bg-pink-500 hover:text-white transition-all" title="Instagram">
-                        <Instagram className="h-6 w-6" />
-                      </a>
+                      ].map((feature, idx) => (
+                        <m.div 
+                          key={idx} 
+                          className="w-full"
+                          initial={{ opacity: 0, y: 40 }}
+                          animate={featuresInView ? { opacity: 1, y: 0 } : {}}
+                          transition={{ duration: 0.5, delay: 0.15 * idx + 0.2, ease: "easeInOut" }}
+                        >
+                          <FeatureCard 
+                            icon={feature.icon} 
+                            title={feature.title} 
+                            description={feature.description} 
+                            delay={0.15 * idx + 0.2} 
+                          />
+                        </m.div>
+                      ))}
                     </div>
                   </div>
-                </m.div>
-              </m.div>
-              
-              {/* Footer - moved to appear right after Stay Connected card */}
-              <motion.footer
-                ref={footerRef}
-                initial={{ opacity: 0, y: 40 }}
-                animate={footerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-                transition={{ duration: 0.7, delay: 0.2, ease: "easeInOut" }}
-                className="w-full border-t border-white/10 mt-4 px-4 sm:px-6 md:px-8 py-4 sm:py-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-400 text-xs sm:text-sm z-10 transition-all duration-300"
-                style={{ minHeight: '64px' }}
-              >
-                <span className="font-normal text-center sm:text-left">© 2025 TARS AI. All rights reserved.</span>
-                <button
-                  onClick={scrollToTopAndFocus}
-                  className="px-3 py-1 rounded-md text-neutral-300 hover:text-white hover:bg-white/10 transition-colors duration-300 text-xs sm:text-sm font-medium focus:outline-none"
-                >
-                  Back to Top
-                </button>
-              </motion.footer>
+                  {/* FAQ Section */}
+                  <div
+                    ref={faqRef}
+                    className="mt-8 mb-8 sm:mt-16 sm:mb-16 px-2 sm:px-0"
+                  >
+                    <FAQSection />
+                  </div>
+                  {/* Contact & Social Card Section */}
+                  <m.div
+                    ref={contactRef}
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={contactInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.5, ease: "easeInOut" }}
+                    className="w-full flex flex-col items-center justify-center mt-8 mb-0 sm:mt-16 sm:mb-0 px-2 sm:px-0"
+                  >
+                    <m.div
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: 'easeInOut' }}
+                      className="relative bg-[#101010]/80 rounded-[2.5rem] shadow-2xl max-w-2xl w-full px-2 sm:px-6 py-4 sm:py-8 flex flex-col items-center gap-8 font-urbanist"
+                      style={{ boxShadow: '0 0 0 3px rgba(255,255,255,0.08), 0 2px 32px 0 rgba(0,0,0,0.25)' }}
+                    >
+                      {/* Top icon */}
+                      <div className="flex items-center justify-center w-20 h-20 rounded-full bg-neutral-200 mb-6 relative group transition-all duration-300">
+                        <span className="absolute inset-0 rounded-full bg-blue-400 opacity-30 blur-xl transition-all duration-300 group-hover:opacity-60 group-hover:blur-2xl" style={{ zIndex: 0 }} />
+                        <span className="relative z-10 flex items-center justify-center w-full h-full">
+                          <MessageSquareQuoteIcon className="h-10 w-10 text-black transition-all duration-300 group-hover:scale-110" />
+                        </span>
+                      </div>
+                      {/* Heading */}
+                      <m.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={contactInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.5, delay: 0.1, ease: 'easeInOut' }}
+                        className="text-2xl sm:text-3xl font-extrabold text-white text-center mb-1"
+                      >
+                        Stay Connected!<br />Message Us &amp; Follow
+                      </m.h2>
+                      {/* Subtext */}
+                      <p className="text-neutral-300 text-center mb-7 max-w-md">Send us a message and follow us for the latest updates, news, and exclusive insights!</p>
+                      {/* Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                        <motion.a
+                          href="https://mail.google.com/mail/?view=cm&fs=1&to=teammurph@tarsai.live"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-6 py-2 rounded-full bg-white text-black font-medium shadow hover:scale-105 transition-all border border-white/20"
+                          whileHover={{ scale: 1.07 }}
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-.876 1.795l-7.5 5.625a2.25 2.25 0 01-2.748 0l-7.5-5.625A2.25 2.25 0 012.25 6.993V6.75" />
+                          </svg>
+                          Write Us
+                        </motion.a>
+                        <motion.button
+                          type="button"
+                          onClick={() => {
+                            let input: HTMLInputElement | null = null;
+                            if (nameInputRef && nameInputRef.current) {
+                              input = nameInputRef.current;
+                            } else {
+                              input = document.querySelector('input[placeholder="Your Name"]') as HTMLInputElement;
+                            }
+                            if (input) {
+                              input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              setTimeout(() => input && input.focus(), 1000);
+                            }
+                          }}
+                          className="flex items-center gap-2 px-6 py-2 rounded-full bg-[#18181f] text-white font-medium shadow hover:scale-105 transition-all border border-white/10"
+                          whileHover={{ scale: 1.07 }}
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+                          </svg>
+                          Join Waitlist
+                        </motion.button>
+                      </div>
+                      {/* Social icons */}
+                      <div className="flex flex-col items-center gap-2">
+                        <span className="text-neutral-400 text-sm mb-1">Follow Us</span>
+                        <div className="flex gap-4">
+                          <a href="https://x.com/sojashivam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#18181f] border border-white/10 text-white hover:bg-neutral-400 hover:text-white transition-all" title="Twitter">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" className="h-6 w-6 text-white group-hover:text-white transition">
+                              <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                            </svg>
+                          </a>
+                          <a href="www.linkedin.com/in/shivammishra-12b097264" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#18181f] border border-white/10 text-white hover:bg-blue-500 hover:text-white transition-all" title="LinkedIn">
+                            <Linkedin className="h-6 w-6" />
+                          </a>
+                          <a href="https://www.instagram.com/shiiiiiivamm/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#18181f] border border-white/10 text-white hover:bg-pink-500 hover:text-white transition-all" title="Instagram">
+                            <Instagram className="h-6 w-6" />
+                          </a>
+                        </div>
+                      </div>
+                    </m.div>
+                  </m.div>
+                  {/* Footer - moved to appear right after Stay Connected card */}
+                  <motion.footer
+                    ref={footerRef}
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={footerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                    transition={{ duration: 0.7, delay: 0.2, ease: "easeInOut" }}
+                    className="w-full border-t border-white/10 mt-4 px-4 sm:px-6 md:px-8 py-4 sm:py-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-400 text-xs sm:text-sm z-10 transition-all duration-300"
+                    style={{ minHeight: '64px' }}
+                  >
+                    <span className="font-normal text-center sm:text-left">© 2025 TARS AI. All rights reserved.</span>
+                    <button
+                      onClick={scrollToTopAndFocus}
+                      className="px-3 py-1 rounded-md text-neutral-300 hover:text-white hover:bg-white/10 transition-colors duration-300 text-xs sm:text-sm font-medium focus:outline-none"
+                    >
+                      Back to Top
+                    </button>
+                  </motion.footer>
+                </>
+              )}
             </div>
           </div>
         </Container>
