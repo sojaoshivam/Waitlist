@@ -19,7 +19,7 @@ function FAQSection() {
   const faqData = [
     {
       question: "How does the waitlist work?",
-      answer: "Sign up for early access and get updates plus exclusive entry before the public launch. We&apos;ll notify you as soon as TARS AI is ready for you to try."
+      answer: "Sign up for early access and get updates plus exclusive entry before the public launch. We'll notify you as soon as TARS AI is ready for you to try."
     },
     {
       question: "Is there a cost to join the waitlist?",
