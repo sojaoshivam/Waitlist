@@ -9,6 +9,7 @@ import { FeatureCard } from "@/components/ui/gradient-card";
 import { useInView, motion as m } from "framer-motion";
 import ScrollToTopOnMount from "@/components/ScrollToTopOnMount";
 import dynamic from 'next/dynamic';
+import Image from "next/image";
 const BackgroundBeams = dynamic(() => import('@/components/ui/background-beams').then(mod => mod.BackgroundBeams), { ssr: false });
 const FAQSection = dynamic(() => import('@/components/ui/faq-section'), { ssr: false });
 import { Container } from "@/components/ui/container";
@@ -89,11 +90,11 @@ export default function Home() {
         <meta property="og:description" content="TARS AI is a smart, multilingual document assistant and AI chatbot for PDFs. Instantly search, chat, and get insights from your documents. Join the waitlist for early access!" />
         <meta property="og:url" content="https://tarsai.live/" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://tarsai.live/static/tars-logo.png" />
+        <meta property="og:image" content="/logo.svg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="TARS AI – AI Chatbot for PDFs & Document Intelligence Platform" />
         <meta name="twitter:description" content="TARS AI is a smart, multilingual document assistant and AI chatbot for PDFs. Instantly search, chat, and get insights from your documents. Join the waitlist for early access!" />
-        <meta name="twitter:image" content="https://tarsai.live/static/tars-logo.png" />
+        <meta name="twitter:image" content="/logo.svg" />
       </Head>
       <ScrollToTopOnMount />
       <main className="min-h-screen w-full bg-neutral-950 relative flex flex-col items-center justify-center antialiased overflow-hidden">
@@ -274,10 +275,10 @@ export default function Home() {
                       style={{ boxShadow: '0 0 0 3px rgba(255,255,255,0.08), 0 2px 32px 0 rgba(0,0,0,0.25)' }}
                     >
                       {/* Top icon */}
-                      <div className="flex items-center justify-center w-20 h-20 rounded-full bg-neutral-200 mb-6 relative group transition-all duration-300">
-                        <span className="absolute inset-0 rounded-full bg-blue-400 opacity-30 blur-xl transition-all duration-300 group-hover:opacity-60 group-hover:blur-2xl" style={{ zIndex: 0 }} />
-                        <span className="relative z-10 flex items-center justify-center w-full h-full">
-                          <MessageSquareQuoteIcon className="h-10 w-10 text-black transition-all duration-300 group-hover:scale-110" />
+                      <div className="flex items-center justify-center w-20 h-20 rounded-full bg-black mb-6 relative group transition-all duration-300">
+                        <span className="absolute inset-0 rounded-full opacity-30 blur-xl transition-all duration-300 group-hover:opacity-60 group-hover:blur-2xl" style={{ zIndex: 0 }} />
+                        <span className="relative z-10 flex items-center justify-center w-full h-full p-0">
+                          <Image src="/logo.svg" alt="Logo" fill style={{objectFit: 'cover'}} className="transition-all duration-300 group-hover:scale-110 rounded-full group-hover:drop-shadow-[0_0_24px_rgba(163,163,163,0.8)]" />
                         </span>
                       </div>
                       {/* Heading */}

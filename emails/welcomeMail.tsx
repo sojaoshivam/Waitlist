@@ -30,7 +30,7 @@ import {
         </Preview>
         <Container style={container}>
           <Img
-            src={`${baseUrl}/static/tars-logo.png`}
+            src="/logo.svg"
             width="170"
             height="50"
             alt="TARS AI"

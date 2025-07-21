@@ -4,6 +4,7 @@ import { z } from "zod";
 import * as React from 'react';
 import { render } from '@react-email/render';
 import { TarsWelcomeEmail } from '../../../emails/welcomeMail';
+
 export const dynamic = "force-dynamic";
 const prisma = new PrismaClient();
 
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest) {
       <!-- Opening copy -->
       <p style="font-size:16px;line-height:26px;margin:0 0 14px;">
         Thank you for hopping on the TARS AI early-access wait-list!  
-        We’re thrilled to have curious minds like yours on board.
+       
       </p>
 
       <!-- Value prop -->
@@ -120,12 +121,7 @@ export async function POST(request: NextRequest) {
         <em>exactly</em> when you need them.
       </p>
 
-      <!-- What happens next -->
-      <p style="font-size:16px;line-height:26px;margin:0 0 24px;">
-        We’re rolling out invitations in small waves to be sure every
-        new user has a smooth experience. When your turn comes up,
-        you’ll receive an e-mail with your personal access link.
-      </p>
+      
 
       <!-- CTA button -->
       <div style="text-align:center;margin:32px 0;">
